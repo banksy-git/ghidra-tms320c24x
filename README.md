@@ -1,6 +1,6 @@
 # TMS320C24 Processor Extension for Ghidra
 
-Author: Paul G. Banks <web@paulbanks.org>
+Author: [Paul G. Banks https://paulbanks.org](https://paulbanks.org)
 
 ## Notes:
 
