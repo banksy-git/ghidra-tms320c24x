@@ -4,7 +4,7 @@ Author: Paul G. Banks [(https://paulbanks.org)](https://paulbanks.org)
 
 ## Notes:
 
-This implements the disassembler for TMS320F/C24x DSP Controllers Reference Guide (spru160c.pdf), allowing you to load firmwares based on that ISA into Ghidra.
+This implements the disassembler for the ISA described in the TMS320F/C24x DSP Controllers Reference Guide (spru160c.pdf), allowing you to load firmwares based on that ISA into Ghidra.
 
 At this stage, all opcodes should be described but I have implemented limited opcode behaviours so the decompilation output will not be useful. 
 
