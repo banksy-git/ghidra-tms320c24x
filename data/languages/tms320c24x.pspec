@@ -1,0 +1,286 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- See Relax specification: Ghidra/Framework/SoftwareModeling/data/languages/processor_spec.rxg -->
+
+<processor_spec>
+  <programcounter register="PC"/>
+
+  <register_data>
+  
+      <!-- Accumulator & MAC path -->
+      <register name="ACC" group="General"/>    <!-- 32-bit accumulator -->
+      <register name="PREG" group="General"/>   <!-- 32-bit product reg -->
+      <register name="TREG" group="General"/>   <!-- multiplier temp (TREG) -->
+    
+      <!-- AR registers -->
+      <register name="AR0" group="General"/>
+      <register name="AR1" group="General"/>
+      <register name="AR2" group="General"/>
+      <register name="AR3" group="General"/>
+      <register name="AR4" group="General"/>
+      <register name="AR5" group="General"/>
+      <register name="AR6" group="General"/>
+      <register name="AR7" group="General"/>
+    
+      <!-- Status/control -->
+      <register name="ST0" group="Status"/>
+      <register name="ST1" group="Status"/>
+      <register name="DP" group="Status"/>
+
+    
+      <!-- Program counter -->
+      <register name="PC" group="Control"/> 
+      <register name="SP" group="Control"/>
+
+
+  </register_data>
+
+  <default_symbols>
+    <symbol name="reset" address="code:0000" entry="true"/>
+    <symbol name="INT1"  address="code:0002" entry="false"/>
+    <symbol name="INT2"  address="code:0004" entry="false"/>
+    <symbol name="INT3"  address="code:0006" entry="false"/>
+    <symbol name="INT4"  address="code:0008" entry="false"/>
+    <symbol name="INT5"  address="code:000A" entry="false"/>
+    <symbol name="INT6"  address="code:000C" entry="false"/>
+    <symbol name="INT7"  address="code:000E" entry="false"/>
+    <symbol name="INT8"  address="code:0010" entry="false"/>
+    <symbol name="INT9"  address="code:0012" entry="false"/>
+    <symbol name="INT10" address="code:0014" entry="false"/>
+    <symbol name="INT11" address="code:0016" entry="false"/>
+    <symbol name="INT12" address="code:0018" entry="false"/>
+    <symbol name="INT13" address="code:001A" entry="false"/>
+    <symbol name="INT14" address="code:001C" entry="false"/>
+    <symbol name="INT15" address="code:001E" entry="false"/>
+    <symbol name="INT16" address="code:0020" entry="false"/>
+    <symbol name="INT17" address="code:0022" entry="false"/>
+    <symbol name="INT18" address="code:0024" entry="false"/>
+    <symbol name="INT19" address="code:0026" entry="false"/>
+    <symbol name="INT20" address="code:0028" entry="false"/>
+    <symbol name="INT21" address="code:002A" entry="false"/>
+    <symbol name="INT22" address="code:002C" entry="false"/>
+    <symbol name="INT23" address="code:002E" entry="false"/>
+    <symbol name="INT24" address="code:0030" entry="false"/>
+    <symbol name="INT25" address="code:0032" entry="false"/>
+    <symbol name="INT26" address="code:0034" entry="false"/>
+    <symbol name="INT27" address="code:0036" entry="false"/>
+    <symbol name="INT28" address="code:0038" entry="false"/>
+    <symbol name="INT29" address="code:003A" entry="false"/>
+    <symbol name="INT30" address="code:003C" entry="false"/>
+    <symbol name="INT31" address="code:003E" entry="false"/>
+    
+
+    <!-- Core registers -->
+    <symbol name="IMR" address="ram:0004" entry="false"/><!-- Interrupt mask reg -->
+    <symbol name="GREG" address="ram:0005" entry="false"/><!-- Global memory allocation reg -->
+    <symbol name="IFR" address="ram:0006" entry="false"/><!-- Interrupt flag reg -->
+
+    <!-- System configuration and interrupt registers -->
+    <symbol name="PIRQR0" address="ram:7010" entry="false"/><!-- Peripheral interrupt request reg 0 -->
+    <symbol name="PIRQR1" address="ram:7011" entry="false"/><!-- Peripheral interrupt request reg 1 -->
+    <symbol name="PIRQR2" address="ram:7012" entry="false"/><!-- Peripheral interrupt request reg 2 -->
+    <symbol name="PIACKR0" address="ram:7014" entry="false"/><!-- Peripheral interrupt acknowledge reg 0 -->
+    <symbol name="PIACKR1" address="ram:7015" entry="false"/><!-- Peripheral interrupt acknowledge reg 1 -->
+    <symbol name="PIACKR2" address="ram:7016" entry="false"/><!-- Peripheral interrupt acknowledge reg 2 -->
+    <symbol name="SCSR1" address="ram:7018" entry="false"/><!-- System control & status reg 1 -->
+    <symbol name="SCSR2" address="ram:7019" entry="false"/><!-- System control & status reg 2 -->
+    <symbol name="DINR" address="ram:701C" entry="false"/><!-- Device identification reg -->
+    <symbol name="PIVR" address="ram:701E" entry="false"/><!-- Peripheral interrupt vector reg -->
+
+    <!-- Watchdog timer (WD) registers -->
+    <symbol name="WDCNTR" address="ram:7023" entry="false"/><!-- WD counter reg -->
+    <symbol name="WDKEY" address="ram:7025" entry="false"/><!-- WD reset key reg -->
+    <symbol name="WDCR" address="ram:7029" entry="false"/><!-- WD timer control reg -->
+
+    <!-- Serial Peripheral Interface (SPI) registers -->
+    <symbol name="SPICCR" address="ram:7040" entry="false"/><!-- SPI configuration control reg -->
+    <symbol name="SPICTL" address="ram:7041" entry="false"/><!-- SPI operation control reg -->
+    <symbol name="SPISTS" address="ram:7042" entry="false"/><!-- SPI status reg -->
+    <symbol name="SPIBRR" address="ram:7044" entry="false"/><!-- SPI baud rate reg -->
+    <symbol name="SPIRXEMU" address="ram:7046" entry="false"/><!-- SPI emulation buffer reg -->
+    <symbol name="SPIRXBUF" address="ram:7047" entry="false"/><!-- SPI serial receive buffer reg -->
+    <symbol name="SPITXBUF" address="ram:7048" entry="false"/><!-- SPI serial transmit buffer reg -->
+    <symbol name="SPIDAT" address="ram:7049" entry="false"/><!-- SPI serial data reg -->
+    <symbol name="SPIPRI" address="ram:704F" entry="false"/><!-- SPI priority control reg -->
+
+    <!-- SCI registers -->
+    <symbol name="SCICCR" address="ram:7050" entry="false"/><!-- SCI communication control reg -->
+    <symbol name="SCICTL1" address="ram:7051" entry="false"/><!-- SCI control reg 1 -->
+    <symbol name="SCIHBAUD" address="ram:7052" entry="false"/><!-- SCI baud-select reg, high bits -->
+    <symbol name="SCILBAUD" address="ram:7053" entry="false"/><!-- SCI baud-select reg, low bits -->
+    <symbol name="SCICTL2" address="ram:7054" entry="false"/><!-- SCI control reg 2 -->
+    <symbol name="SCIRXST" address="ram:7055" entry="false"/><!-- SCI receiver status reg -->
+    <symbol name="SCIRXEMU" address="ram:7056" entry="false"/><!-- SCI emulation data buffer reg -->
+    <symbol name="SCIRXBUF" address="ram:7057" entry="false"/><!-- SCI receiver data buffer reg -->
+    <symbol name="SCITXBUF" address="ram:7059" entry="false"/><!-- SCI transmit data buffer reg -->
+    <symbol name="SCIPRI" address="ram:705F" entry="false"/><!-- SCI priority control reg -->
+
+    <!-- External interrupt configuration registers -->
+    <symbol name="XINT1CR" address="ram:7070" entry="false"/><!-- Ext interrupt 1 config reg -->
+    <symbol name="XINT2CR" address="ram:7071" entry="false"/><!-- Ext interrupt 2 config reg -->
+
+    <!-- Digital I/O registers -->
+    <symbol name="MCRA" address="ram:7090" entry="false"/><!-- I/O mux control reg A -->
+    <symbol name="MCRB" address="ram:7092" entry="false"/><!-- I/O mux control reg B -->
+    <symbol name="MCRC" address="ram:7094" entry="false"/><!-- I/O mux control reg C -->
+    <symbol name="PADATDIR" address="ram:7098" entry="false"/><!-- I/O port A data & dir reg -->
+    <symbol name="PBDATDIR" address="ram:709A" entry="false"/><!-- I/O port B data & dir reg -->
+    <symbol name="PCDATDIR" address="ram:709C" entry="false"/><!-- I/O port C data & dir reg -->
+    <symbol name="PDDATDIR" address="ram:709E" entry="false"/><!-- I/O port D data & dir reg -->
+    <symbol name="PEDATDIR" address="ram:7095" entry="false"/><!-- I/O port E data & dir reg -->
+    <symbol name="PFDATDIR" address="ram:7096" entry="false"/><!-- I/O port F data & dir reg -->
+
+    <!-- Analog-to-Digital Converter (ADC) registers -->
+    <symbol name="ADCTRL1" address="ram:70A0" entry="false"/><!-- ADC control reg 1 -->
+    <symbol name="ADCTRL2" address="ram:70A1" entry="false"/><!-- ADC control reg 2 -->
+    <symbol name="MAX_CONV" address="ram:70A2" entry="false"/><!-- Maximum conversion channels reg -->
+    <symbol name="CHSELSEQ1" address="ram:70A3" entry="false"/><!-- Channel select sequencing control reg 1 -->
+    <symbol name="CHSELSEQ2" address="ram:70A4" entry="false"/><!-- Channel select sequencing control reg 2 -->
+    <symbol name="CHSELSEQ3" address="ram:70A5" entry="false"/><!-- Channel select sequencing control reg 3 -->
+    <symbol name="CHSELSEQ4" address="ram:70A6" entry="false"/><!-- Channel select sequencing control reg 4 -->
+    <symbol name="AUTO_SEQ_SR" address="ram:70A7" entry="false"/><!-- Autosequence status reg -->
+    <symbol name="RESULT0" address="ram:70A8" entry="false"/><!-- Conversion result buffer reg 0 -->
+    <symbol name="RESULT1" address="ram:70A9" entry="false"/><!-- Conversion result buffer reg 1 -->
+    <symbol name="RESULT2" address="ram:70AA" entry="false"/><!-- Conversion result buffer reg 2 -->
+    <symbol name="RESULT3" address="ram:70AB" entry="false"/><!-- Conversion result buffer reg 3 -->
+    <symbol name="RESULT4" address="ram:70AC" entry="false"/><!-- Conversion result buffer reg 4 -->
+    <symbol name="RESULT5" address="ram:70AD" entry="false"/><!-- Conversion result buffer reg 5 -->
+    <symbol name="RESULT6" address="ram:70AE" entry="false"/><!-- Conversion result buffer reg 6 -->
+    <symbol name="RESULT7" address="ram:70AF" entry="false"/><!-- Conversion result buffer reg 7 -->
+    <symbol name="RESULT8" address="ram:70B0" entry="false"/><!-- Conversion result buffer reg 8 -->
+    <symbol name="RESULT9" address="ram:70B1" entry="false"/><!-- Conversion result buffer reg 9 -->
+    <symbol name="RESULT10" address="ram:70B2" entry="false"/><!-- Conversion result buffer reg 10 -->
+    <symbol name="RESULT11" address="ram:70B3" entry="false"/><!-- Conversion result buffer reg 11 -->
+    <symbol name="RESULT12" address="ram:70B4" entry="false"/><!-- Conversion result buffer reg 12 -->
+    <symbol name="RESULT13" address="ram:70B5" entry="false"/><!-- Conversion result buffer reg 13 -->
+    <symbol name="RESULT14" address="ram:70B6" entry="false"/><!-- Conversion result buffer reg 14 -->
+    <symbol name="RESULT15" address="ram:70B7" entry="false"/><!-- Conversion result buffer reg 15 -->
+    <symbol name="CALIBRATION" address="ram:70B8" entry="false"/><!-- Calibration result reg -->
+
+    <!-- Controller Area Network (CAN) registers -->
+    <symbol name="MDER" address="ram:7100" entry="false"/><!-- CAN mailbox direction/enable reg -->
+    <symbol name="TCR" address="ram:7101" entry="false"/><!-- CAN transmission control reg -->
+    <symbol name="RCR" address="ram:7102" entry="false"/><!-- CAN receive control reg -->
+    <symbol name="MCR" address="ram:7103" entry="false"/><!-- CAN master control reg -->
+    <symbol name="BCR2" address="ram:7104" entry="false"/><!-- CAN bit config reg 2 -->
+    <symbol name="BCR1" address="ram:7105" entry="false"/><!-- CAN bit config reg 1 -->
+    <symbol name="ESR" address="ram:7106" entry="false"/><!-- CAN error status reg -->
+    <symbol name="GSR" address="ram:7107" entry="false"/><!-- CAN global status reg -->
+    <symbol name="CEC" address="ram:7108" entry="false"/><!-- CAN trans and rcv err counters -->
+    <symbol name="CAN_IFR" address="ram:7109" entry="false"/><!-- CAN interrupt flag reg -->
+    <symbol name="CAN_IMR" address="ram:710a" entry="false"/><!-- CAN interrupt mask reg -->
+    <symbol name="LAM0_H" address="ram:710b" entry="false"/><!-- CAN local acceptance mask MBX0/1 -->
+    <symbol name="LAM0_L" address="ram:710c" entry="false"/><!-- CAN local acceptance mask MBX0/1 -->
+    <symbol name="LAM1_H" address="ram:710d" entry="false"/><!-- CAN local acceptance mask MBX2/3 -->
+    <symbol name="LAM1_L" address="ram:710e" entry="false"/><!-- CAN local acceptance mask MBX2/3 -->
+    <symbol name="MSGID0L" address="ram:7200" entry="false"/><!-- CAN message ID for mailbox 0 (lower 16 bits) -->
+    <symbol name="MSGID0H" address="ram:7201" entry="false"/><!-- CAN message ID for mailbox 0 (upper 16 bits) -->
+    <symbol name="MSGCTRL0" address="ram:7202" entry="false"/><!-- CAN RTR and DLC for mailbox 0 -->
+    <symbol name="MBX0A" address="ram:7204" entry="false"/><!-- CAN 2 of 8 bytes of mailbox 0 -->
+    <symbol name="MBX0B" address="ram:7205" entry="false"/><!-- CAN 2 of 8 bytes of mailbox 0 -->
+    <symbol name="MBX0C" address="ram:7206" entry="false"/><!-- CAN 2 of 8 bytes of mailbox 0 -->
+    <symbol name="MBX0D" address="ram:7207" entry="false"/><!-- CAN 2 of 8 bytes of mailbox 0 -->
+    <symbol name="MSGID1L" address="ram:7208" entry="false"/><!-- CAN message ID for mailbox 1 (lower 16 bits) -->
+    <symbol name="MSGID1H" address="ram:7209" entry="false"/><!-- CAN message ID for mailbox 1 (upper 16 bits) -->
+    <symbol name="MSGCTRL1" address="ram:720A" entry="false"/><!-- CAN RTR and DLC for mailbox 1 -->
+    <symbol name="MBX1A" address="ram:720C" entry="false"/><!-- CAN 2 of 8 bytes of mailbox 1 -->
+    <symbol name="MBX1B" address="ram:720D" entry="false"/><!-- CAN 2 of 8 bytes of mailbox 1 -->
+    <symbol name="MBX1C" address="ram:720E" entry="false"/><!-- CAN 2 of 8 bytes of mailbox 1 -->
+    <symbol name="MBX1D" address="ram:720F" entry="false"/><!-- CAN 2 of 8 bytes of mailbox 1 -->
+    <symbol name="MSGID2L" address="ram:7210" entry="false"/><!-- CAN message ID for mailbox 2 (lower 16 bits) -->
+    <symbol name="MSGID2H" address="ram:7211" entry="false"/><!-- CAN message ID for mailbox 2 (upper 16 bits) -->
+    <symbol name="MSGCTRL2" address="ram:7212" entry="false"/><!-- CAN RTR and DLC for mailbox 2 -->
+    <symbol name="MBX2A" address="ram:7214" entry="false"/><!-- CAN 2 of 8 bytes of mailbox 2 -->
+    <symbol name="MBX2B" address="ram:7215" entry="false"/><!-- CAN 2 of 8 bytes of mailbox 2 -->
+    <symbol name="MBX2C" address="ram:7216" entry="false"/><!-- CAN 2 of 8 bytes of mailbox 2 -->
+    <symbol name="MBX2D" address="ram:7217" entry="false"/><!-- CAN 2 of 8 bytes of mailbox 2 -->
+    <symbol name="MSGID3L" address="ram:7218" entry="false"/><!-- CAN message ID for mailbox 3 (lower 16 bits) -->
+    <symbol name="MSGID3H" address="ram:7219" entry="false"/><!-- CAN message ID for mailbox 3 (upper 16 bits) -->
+    <symbol name="MSGCTRL3" address="ram:721A" entry="false"/><!-- CAN RTR and DLC for mailbox 3 -->
+    <symbol name="MBX3A" address="ram:721C" entry="false"/><!-- CAN 2 of 8 bytes of mailbox 3 -->
+    <symbol name="MBX3B" address="ram:721D" entry="false"/><!-- CAN 2 of 8 bytes of mailbox 3 -->
+    <symbol name="MBX3C" address="ram:721E" entry="false"/><!-- CAN 2 of 8 bytes of mailbox 3 -->
+    <symbol name="MBX3D" address="ram:721F" entry="false"/><!-- CAN 2 of 8 bytes of mailbox 3 -->
+    <symbol name="MSGID4L" address="ram:7220" entry="false"/><!-- CAN message ID for mailbox 4 (lower 16 bits) -->
+    <symbol name="MSGID4H" address="ram:7221" entry="false"/><!-- CAN message ID for mailbox 4 (upper 16 bits) -->
+    <symbol name="MSGCTRL4" address="ram:7222" entry="false"/><!-- CAN RTR and DLC for mailbox 4 -->
+    <symbol name="MBX4A" address="ram:7224" entry="false"/><!-- CAN 2 of 8 bytes of mailbox 4 -->
+    <symbol name="MBX4B" address="ram:7225" entry="false"/><!-- CAN 2 of 8 bytes of mailbox 4 -->
+    <symbol name="MBX4C" address="ram:7226" entry="false"/><!-- CAN 2 of 8 bytes of mailbox 4 -->
+    <symbol name="MBX4D" address="ram:7227" entry="false"/><!-- CAN 2 of 8 bytes of mailbox 4 -->
+    <symbol name="MSGID5L" address="ram:7228" entry="false"/><!-- CAN message ID for mailbox 5 (lower 16 bits) -->
+    <symbol name="MSGID5H" address="ram:7229" entry="false"/><!-- CAN message ID for mailbox 5 (upper 16 bits) -->
+    <symbol name="MSGCTRL5" address="ram:722A" entry="false"/><!-- CAN RTR and DLC for mailbox 5 -->
+    <symbol name="MBX5A" address="ram:722C" entry="false"/><!-- CAN 2 of 8 bytes of mailbox 5 -->
+    <symbol name="MBX5B" address="ram:722D" entry="false"/><!-- CAN 2 of 8 bytes of mailbox 5 -->
+    <symbol name="MBX5C" address="ram:722E" entry="false"/><!-- CAN 2 of 8 bytes of mailbox 5 -->
+    <symbol name="MBX5D" address="ram:722F" entry="false"/><!-- CAN 2 of 8 bytes of mailbox 5 -->
+
+    <!-- Event Manager A (EVA) registers -->
+    <symbol name="GPTCONA" address="ram:7400" entry="false"/><!-- GP timer control reg A -->
+    <symbol name="T1CNT" address="ram:7401" entry="false"/><!-- GP timer 1 counter reg -->
+    <symbol name="T1CMPR" address="ram:7402" entry="false"/><!-- GP timer 1 compare reg -->
+    <symbol name="T1PR" address="ram:7403" entry="false"/><!-- GP timer 1 period reg -->
+    <symbol name="T1CON" address="ram:7404" entry="false"/><!-- GP timer 1 control reg -->
+    <symbol name="T2CNT" address="ram:7405" entry="false"/><!-- GP timer 2 counter reg -->
+    <symbol name="T2CMPR" address="ram:7406" entry="false"/><!-- GP timer 2 compare reg -->
+    <symbol name="T2PR" address="ram:7407" entry="false"/><!-- GP timer 2 period reg -->
+    <symbol name="T2CON" address="ram:7408" entry="false"/><!-- GP timer 2 control reg -->
+    <symbol name="COMCONA" address="ram:7411" entry="false"/><!-- Compare control reg A -->
+    <symbol name="ACTRA" address="ram:7413" entry="false"/><!-- Compare action control reg A -->
+    <symbol name="DBTCONA" address="ram:7415" entry="false"/><!-- Dead-band timer control reg A -->
+    <symbol name="CMPR1" address="ram:7417" entry="false"/><!-- compare reg 1 -->
+    <symbol name="CMPR2" address="ram:7418" entry="false"/><!-- compare reg 2 -->
+    <symbol name="CMPR3" address="ram:7419" entry="false"/><!-- compare reg 3 -->
+    <symbol name="CAPCONA" address="ram:7420" entry="false"/><!-- Capture control reg A -->
+    <symbol name="CAPFIFOA" address="ram:7422" entry="false"/><!-- Capture FIFO status reg A -->
+    <symbol name="CAP1FIFO" address="ram:7423" entry="false"/><!-- Capture Channel 1 FIFO top -->
+    <symbol name="CAP2FIFO" address="ram:7424" entry="false"/><!-- Capture Channel 2 FIFO top -->
+    <symbol name="CAP3FIFO" address="ram:7425" entry="false"/><!-- Capture Channel 3 FIFO top -->
+    <symbol name="CAP1FBOT" address="ram:7427" entry="false"/><!-- Bottom reg of capture FIFO stack 1 -->
+    <symbol name="CAP2FBOT" address="ram:7427" entry="false"/><!-- Bottom reg of capture FIFO stack 2 -->
+    <symbol name="CAP3FBOT" address="ram:7427" entry="false"/><!-- Bottom reg of capture FIFO stack 3 -->
+    <symbol name="EVAIMRA" address="ram:742C" entry="false"/><!-- EVA interrupt mask reg A -->
+    <symbol name="EVAIMRB" address="ram:742D" entry="false"/><!-- EVA interrupt mask reg B -->
+    <symbol name="EVAIMRC" address="ram:742E" entry="false"/><!-- EVA interrupt mask reg C -->
+    <symbol name="EVAIFRA" address="ram:742F" entry="false"/><!-- EVA interrupt flag reg A -->
+    <symbol name="EVAIFRB" address="ram:7430" entry="false"/><!-- EVA interrupt flag reg B -->
+    <symbol name="EVAIFRC" address="ram:7431" entry="false"/><!-- EVA interrupt flag reg C -->
+
+    <!-- Event Manager B (EVB) registers -->
+    <symbol name="GPTCONB" address="ram:7500" entry="false"/><!-- GP timer control reg B -->
+    <symbol name="T3CNT" address="ram:7501" entry="false"/><!-- GP timer 3 counter reg -->
+    <symbol name="T3CMPR" address="ram:7502" entry="false"/><!-- GP timer 3 compare reg -->
+    <symbol name="T3PR" address="ram:7503" entry="false"/><!-- GP timer 3 period reg -->
+    <symbol name="T3CON" address="ram:7504" entry="false"/><!-- GP timer 3 control reg -->
+    <symbol name="T4CNT" address="ram:7505" entry="false"/><!-- GP timer 4 counter reg -->
+    <symbol name="T4CMPR" address="ram:7506" entry="false"/><!-- GP timer 4 compare reg -->
+    <symbol name="T4PR" address="ram:7507" entry="false"/><!-- GP timer 4 period reg -->
+    <symbol name="T4CON" address="ram:7508" entry="false"/><!-- GP timer 4 control reg -->
+    <symbol name="COMCONB" address="ram:7511" entry="false"/><!-- Compare control register B -->
+    <symbol name="ACTRB" address="ram:7513" entry="false"/><!-- Compare action control register B -->
+    <symbol name="DBTCONB" address="ram:7515" entry="false"/><!-- Dead-band timer control reg B -->
+    <symbol name="CMPR4" address="ram:7517" entry="false"/><!-- Compare reg 4 -->
+    <symbol name="CMPR5" address="ram:7518" entry="false"/><!-- Compare reg 5 -->
+    <symbol name="CMPR6" address="ram:7519" entry="false"/><!-- Compare reg 6 -->
+    <symbol name="CAPCONB" address="ram:7520" entry="false"/><!-- Capture control reg B -->
+    <symbol name="CAPFIFOB" address="ram:7522" entry="false"/><!-- Capture FIFO status reg B -->
+    <symbol name="CAP4FIFO" address="ram:7523" entry="false"/><!-- Capture channel 4 FIFO top -->
+    <symbol name="CAP5FIFO" address="ram:7524" entry="false"/><!-- Capture channel 5 FIFO top -->
+    <symbol name="CAP6FIFO" address="ram:7525" entry="false"/><!-- Capture channel 6 FIFO top -->
+    <symbol name="CAP4FBOT" address="ram:7527" entry="false"/><!-- Bottom reg of capture FIFO stack 4 -->
+    <symbol name="CAP5FBOT" address="ram:7527" entry="false"/><!-- Bottom reg of capture FIFO stack 5 -->
+    <symbol name="CAP6FBOT" address="ram:7527" entry="false"/><!-- Bottom reg of capture FIFO stack 6 -->
+    <symbol name="EVBIMRA" address="ram:752C" entry="false"/><!-- EVB interrupt mask reg A -->
+    <symbol name="EVBIMRB" address="ram:752D" entry="false"/><!-- EVB interrupt mask reg B -->
+    <symbol name="EVBIMRC" address="ram:752E" entry="false"/><!-- EVB interrupt mask reg C -->
+    <symbol name="EVBIFRA" address="ram:752F" entry="false"/><!-- EVB interrupt flag reg A -->
+    <symbol name="EVBIFRB" address="ram:7530" entry="false"/><!-- EVB interrupt flag reg B -->
+    <symbol name="EVBIFRC" address="ram:7531" entry="false"/><!-- EVB interrupt flag reg C -->
+
+    <!-- I/O space mapped registers -->
+    <symbol name="FCMR" address="ram:0FF0" entry="false"/><!-- Flash control mode reg -->
+    <symbol name="WSGR" address="ram:0FFF" entry="false"/><!-- Wait-state generator reg -->
+    
+  </default_symbols>
+</processor_spec>
