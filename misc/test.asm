@@ -11,3 +11,5 @@
     ADD *-, 6, AR1
     ADD *-, 0, AR1
     ADD #0aaaah
+
+    B $

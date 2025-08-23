@@ -26,7 +26,7 @@
         </pentry>
     
         <pentry minsize="1" maxsize="500" align="2">
-          <addr offset="2" space="stack"/>
+          <addr offset="2" space="hwstack"/>
         </pentry>
       </input>
       <output>
