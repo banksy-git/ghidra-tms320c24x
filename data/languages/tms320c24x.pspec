@@ -11,6 +11,9 @@
   
       <!-- Accumulator & MAC path -->
       <register name="ACC" group="General"/>    <!-- 32-bit accumulator -->
+      <register name="ACCL" group="General"/>    <!-- 16-bit accumulator low word-->
+      <register name="ACCH" group="General"/>    <!-- 16-bit accumulator high word-->
+
       <register name="PREG" group="General"/>   <!-- 32-bit product reg -->
       <register name="TREG" group="General"/>   <!-- multiplier temp (TREG) -->
     

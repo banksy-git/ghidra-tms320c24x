@@ -6,19 +6,20 @@
 define endian=little;
 define alignment=2;
 
-define space code type=ram_space size=2 wordsize=2;
-define space ram type=ram_space size=2 wordsize=2 default;
+define space code type=ram_space size=2 wordsize=2 default;
+define space ram type=ram_space size=2 wordsize=2;
 define space io type=ram_space size=2 wordsize=2;
 define space hwstack type=ram_space wordsize=2 size=2;
 define space register type=register_space wordsize=2 size=1;
 
 define register offset=0x00 size=2 [ PC ];
 define register offset=0x02 size=4 [ ACC PREG ];
-define register offset=0x10 size=2 [ TREG AR0 AR1 AR2 AR3 AR4 AR5 AR6 AR7 ST0 ST1 SP ];
+define register offset=0x02 size=2 [ ACCL ACCH PREGL PREGH ];
+define register offset=0x10 size=2 [ TREG AR0 AR1 AR2 AR3 AR4 AR5 AR6 AR7 ST0 ST1 SP DP ];
 
 define register offset=0x100 size=4 contextreg;
 define context contextreg
-  ctx_dp=(0, 9)
+  ctx_dp=(0, 8)
   ctx_arp=(10, 12)
 ;
 
@@ -76,6 +77,14 @@ define token inst(16)
   shft_0_3 = (0, 3)
   short_imm_0_7 = (0, 7)
 
+  zl_tp = (8, 9)
+  zl_result = (6, 7)
+  zl_test = (2, 3)
+  zl_testc_result = (4,4)
+  zl_testc = (0,0)
+  zl_testv_result = (5,5)
+  zl_testv = (1,1)
+
   tpzlvczlvc_0_9 = (0, 9)
   bitx_8_11 = (8, 11)
   cm_0_1 = (0, 1)
@@ -103,15 +112,25 @@ pma: imm16 is imm16	{
 }
 
 long_imm: imm16 is imm16	{ 
-  local var:2 = imm16;
-  export var; 
+  local val:2 = imm16;
+  export val;
 }
 
-dma: addr is ctx_dp & dma_0_6 [addr = (ctx_dp<<7) | dma_0_6; ] {
+dma: dma_0_6 is dma_0_6 {
+  local addr:2 = (DP<<7) | dma_0_6;
   export *[ram]:2 addr;
 }
 
-attach variables [ arx_0_2 arx2_0_2 aru_4_6 arx2_8_10 ctx_arp ] [ AR0 AR1 AR2 AR3 AR4 AR5 AR6 AR7 ];
+attach variables [ arx2_0_2 aru_4_6 arx2_8_10 ctx_arp ] [ AR0 AR1 AR2 AR3 AR4 AR5 AR6 AR7 ];
+
+arx_sel: "AR0" is arx_0_2=0 { $(ARP) = 0; export 0:1; }
+arx_sel: "AR1" is arx_0_2=1 { $(ARP) = 1; export 1:1; }
+arx_sel: "AR2" is arx_0_2=2 { $(ARP) = 2; export 2:1; }
+arx_sel: "AR3" is arx_0_2=3 { $(ARP) = 3; export 3:1; }
+arx_sel: "AR4" is arx_0_2=4 { $(ARP) = 4; export 4:1; }
+arx_sel: "AR5" is arx_0_2=5 { $(ARP) = 5; export 5:1; }
+arx_sel: "AR6" is arx_0_2=6 { $(ARP) = 6; export 6:1; }
+arx_sel: "AR7" is arx_0_2=7 { $(ARP) = 7; export 7:1; }
 
 ind: "*"        is aru_4_6=0b000 & aru_4_6 {
   local addr:2 = aru_4_6;
@@ -151,6 +170,50 @@ ind: "*BR0+"    is aru_4_6=0b111 & aru_4_6 {
   aru_4_6 = addr + AR0; # TODO: Fix for reverse carry
   export *[ram]:2 addr;
 }
+
+condA: "EQ"  is zl_test=0b10 & zl_result=0b10 { local x:1 = ACC == 0; export x; }
+condA: "NEQ" is zl_test=0b10 & zl_result=0b00 { local x:1 = ACC != 0; export x; }
+condA: "LT" is  zl_test=0b01 & zl_result=0b01 { local x:1 = ACC s< 0; export x; }
+condA: "GT" is  zl_test=0b01 & zl_result=0b00 { local x:1 = ACC s> 0; export x; }
+condA: "LEQ" is zl_test=0b11 & zl_result=0b11 { local x:1 = ACC s<= 0; export x; }
+condA: "GEQ" is zl_test=0b11 & zl_result=0b10 { local x:1 = ACC s>= 0; export x; }
+condA: "" is    zl_test=0b00 { local x:1 = 1; export x; }
+
+condC: "C"  is zl_testc=1 & zl_testc_result=1 { local x:1 = $(C) == 1; export x; }
+condC: "NC" is zl_testc=1 & zl_testc_result=0 { local x:1 = $(C) == 0; export x; }
+condC: ""   is zl_testc=0 { local x:1 = 1; export x; }
+
+condV: "OV"  is zl_testv=1 & zl_testv_result=1 { local x:1 = $(OV) == 1; export x; }
+condV: "NOV" is zl_testv=1 & zl_testv_result=0 { local x:1 = $(OV) == 0; export x; }
+condV: ""    is zl_testv=0 { local x:1 = 1; export x; }
+
+condT: "BIO" is zl_tp=0 { local x:1 = 1; export x; }
+condT: "TC"  is zl_tp=1 { local x:1 = $(TC)==1; export x; }
+condT: "NTC" is zl_tp=2 { local x:1 = $(TC)==0; export x; }
+condT: ""    is zl_tp=3 { local x:1 = 1; export x; }
+
+cond: condA condC condV condT is condA & condC & condV & condT {
+  local result:1 = condA & condC & condV & condT;
+  export result;
+}
+
+macro get_ar(dst) {
+  if ($(ARP) != 0) goto <b>; dst = AR0; goto <done>;
+  <b> if ($(ARP) != 1) goto <c>; dst = AR1; goto <done>;
+  <c> if ($(ARP) != 2) goto <d>; dst = AR2; goto <done>;
+  <d> if ($(ARP) != 3) goto <e>; dst = AR3; goto <done>;
+  <e> if ($(ARP) != 4) goto <ff>; dst = AR4; goto <done>;
+  <ff> if ($(ARP) != 5) goto <gg>; dst = AR5; goto <done>;
+  <gg> if ($(ARP) != 6) goto <h>; dst = AR6; goto <done>;
+  <h> if ($(ARP) != 7) goto <done>; dst = AR7;
+  <done>
+}
+
+cmpr_op: "00 ;AR=AR0" is cm_0_1=0 { local x:2 = 0; get_ar(x); $(TC) = x==AR0; }
+cmpr_op: "01 ;AR<AR0" is cm_0_1=1 { local x:2 = 0; get_ar(x); $(TC) = x<AR0;}
+cmpr_op: "10 ;AR>AR0" is cm_0_1=2 { local x:2 = 0; get_ar(x); $(TC) = x>AR0;}
+cmpr_op: "11 ;AR<>AR0" is cm_0_1=3 { local x:2 = 0; get_ar(x); $(TC) = x!=AR0;}
+
 
 ######################################
 # Instruction semantics
@@ -250,7 +313,7 @@ macro instr_lacc_shift(val, shift) {
 #-----------------------------
 macro instr_lacl(val) {	
   local _val16:2 = val;
-  ACC[0,16] = _val16;
+  ACCL = _val16;
 }
 
 # LACT - Load ACC with shift (0 to 15) specified by TREG
@@ -272,10 +335,11 @@ macro instr_lar(register, val) {
 
 # LDP - Load data page pointer
 #------------------------------
-macro instr_ldp(val) {
-  local _val16:2 = val;	
-  local _val:2 = zext(_val16);
-  $(DP) = _val;
+macro instr_ldp(val, ctx_dp) {
+  local _val16:2 = val;
+  DP = val;
+  $(DP) = _val16[0,9];
+  ctx_dp = 0;
 }
 
 # LPH - Load high PREG
@@ -283,7 +347,7 @@ macro instr_ldp(val) {
 macro instr_lph(val) {
   local _val16:2 = val;	
   local _val:2 = zext(_val16);
-  PREG[16,16]= _val;
+  PREGH = _val;
 }
 
 # LST - Load status register
@@ -352,28 +416,28 @@ macro instr_pshd(val) {
 #-----------------------
 macro instr_sach(memloc, shift_) {
   local shift:1 = shift_;
-  local val:4 = zext(ACC[16, 16]) << shift;
-  memloc = val[0, 16];
+  local val:2 = zext(ACCH) << shift;
+  memloc = val;
 }
 
 # SACL - Store low ACC
 #----------------------
 macro instr_sacl(memloc, shift_) {
   local shift:1 = shift_;
-  local val:4 = zext(ACC[0, 16]) << shift;
-  memloc = val[0, 16];
+  local val:2 = zext(ACCL) << shift;
+  memloc = val;
 }
 
 # SPH - Store high PREG
 #-----------------------
 macro instr_sph(memloc) {
-  memloc = PREG[16, 16];
+  memloc = PREGH;
 }
 
 # SPL - Store low PREG
 #----------------------
 macro instr_spl(memloc) {
-  memloc = PREG[0, 16];
+  memloc = PREGL;
 }
 
 # SPLK - Store long immediate to data memory location

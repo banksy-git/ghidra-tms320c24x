@@ -146,17 +146,19 @@
 #-----------------------------------
 # 0111 1011 1AAA AAAA -  indirect
 :BANZ pma, ind, arx_0_2 is  op_7_15=0b011110111 & is_arx=1 & is_ind=1 & ind & arx_0_2 ; pma {
-    if $(TC) goto pma;
+    local x:2 = 0; get_ar(x);
+    if (x!=0) goto pma;
 }
 :BANZ pma, ind is  op_7_15=0b011110111 & is_arx=0 & is_ind=1 & ind ; pma {
-    if $(TC) goto pma;
+    local x:2 = 0; get_ar(x);
+    if (x!=0) goto pma;
 }
 
 # BCND - Branch conditionally
 #-----------------------------
 # 1110 00TP ZLVC ZLVC -  
-:BCND pma, tpzlvczlvc_0_9 is  op_10_15=0b111000 & tpzlvczlvc_0_9 ; pma {
-  if $(TC) goto pma;
+:BCND pma, cond is  op_10_15=0b111000 & cond ; pma {
+  if (cond==0) goto pma;
 }
 
 # BIT - Test bit
@@ -226,8 +228,9 @@
 # CC - Call conditionally
 #-------------------------
 # 1110 10TP ZLVC ZLVC -  
-:CC pma, tpzlvczlvc_0_9 is  op_10_15=0b111010 & tpzlvczlvc_0_9 ; pma {
-    call pma;
+:CC pma, cond is  op_10_15=0b111010 & cond ; pma {
+  if (cond==0) goto inst_next;
+  call pma;
 }
 
 # CLRC - Clear control bits
@@ -271,7 +274,9 @@
 # CMPR - Compare current AR with AR0
 #------------------------------------
 # 1011 1111 0100 01CM -  
-:CMPR cm_0_1 is  op_2_15=0b10111111010001 & cm_0_1  {}
+:CMPR cmpr_op is  op_2_15=0b10111111010001 & cmpr_op  {
+
+}
 
 # DMOV - Data move in data memory
 #---------------------------------
@@ -388,21 +393,19 @@
 # LDP - Load data page pointer
 #------------------------------
 # 0000 1101 IAAA AAAA -  direct or indirect
-:LDP ind, arx_0_2 is  op_8_15=0b00001101 & is_arx=1 & is_ind=1 & ind & arx_0_2 {
-  instr_ldp(*ind);
+:LDP ind, arx_0_2 is  op_8_15=0b00001101 & is_arx=1 & is_ind=1 & ind & arx_0_2 & ctx_dp {
+
 }
-:LDP ind is  op_8_15=0b00001101 & is_arx=0 & is_ind=1 & ind  {
-  instr_ldp(*ind);
+:LDP ind is  op_8_15=0b00001101 & is_arx=0 & is_ind=1 & ind & ctx_dp {
+
 }
-:LDP dma is  op_8_15=0b00001101 & is_ind=0 & dma  {
-  instr_ldp(*dma);
+:LDP dma is  op_8_15=0b00001101 & is_ind=0 & dma & ctx_dp {
+
 }
 # 1011 110I IIII IIII -  short immediate
-:LDP addr9_0_8 is  op_9_15=0b1011110 & addr9_0_8  [
-  ctx_dp = addr9_0_8; 
-  globalset(inst_next, ctx_dp); 
-] {
-  instr_ldp(addr9_0_8);
+:LDP addr9_0_8 is  op_9_15=0b1011110 & addr9_0_8 & ctx_dp {
+  $(DP) = addr9_0_8;
+  DP = addr9_0_8;
 }
 
 # LPH - Load high PREG
@@ -492,16 +495,22 @@
 # MACD - Multiply and accumulate with data move
 #-----------------------------------------------
 # 1010 0011 IAAA AAAA -  direct or indirect
-:MACD pma, ind, arx_0_2 is  op_8_15=0b10100011 & is_arx=1 & is_ind=1 & ind & arx_0_2 ; pma {}
+:MACD pma, ind, arx_sel is  op_8_15=0b10100011 & is_arx=1 & is_ind=1 & ind & arx_sel ; pma {}
 :MACD pma, ind is  op_8_15=0b10100011 & is_arx=0 & is_ind=1 & ind ; pma {}
 :MACD pma, dma is  op_8_15=0b10100011 & is_ind=0 & dma ; pma {}
 
 # MAR - Modify current AR and/or ARP
 #------------------------------------
 # 1000 1011 IAAA AAAA -  indirect (performs no operation when direct)
-:MAR ind, arx_0_2 is  op_8_15=0b10001011 & is_arx=1 & is_ind=1 & ind & arx_0_2  {}
-:MAR ind is  op_8_15=0b10001011 & is_arx=0 & is_ind=1 & ind  {}
-:MAR dma is  op_8_15=0b10001011 & is_ind=0 & dma  {}
+:MAR ind, arx_sel is  op_8_15=0b10001011 & is_arx=1 & is_ind=1 & ind & arx_sel  {
+  # Side effects on operands only
+}
+:MAR ind is  op_8_15=0b10001011 & is_arx=0 & is_ind=1 & ind  {
+  # Side effects on operands only
+}
+:MAR dma is  op_8_15=0b10001011 & is_ind=0 & dma  {
+  # NOP
+}
 
 # MPY - Multiply TREG
 #---------------------
@@ -649,8 +658,9 @@
 # RETC - Return conditionally
 #-----------------------------
 # 1110 11TP ZLVC ZLVC -  
-:RETC tpzlvczlvc_0_9 is  op_10_15=0b111011 & tpzlvczlvc_0_9  {
+:RETC cond is  op_10_15=0b111011 & cond  {
   retAddr:2 = 0;
+  if (cond==0) goto inst_next;
   pop(retAddr);
   return [retAddr];
 }
@@ -819,7 +829,8 @@
   instr_splk(ind, long_imm);
 }
 :SPLK #long_imm, dma is  op_8_15=0b10101110 & is_ind=0 & dma ; long_imm {
-  instr_splk(dma, long_imm);
+  #instr_splk(dma, long_imm);
+  dma = long_imm;
 }
 
 # SPM - Set product shift mode
